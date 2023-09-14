@@ -2,7 +2,8 @@ const express = require('express')
 const dotenv = require('dotenv')
 const connectDB =require('./config/config')
 require('colors')
-const morgan = require('morgan')
+const morgan = require('morgan');
+const path = require('path')
 
 //config dotenv
 dotenv.config()
@@ -20,6 +21,12 @@ app.use(morgan('dev'))
 app.use('/api/pizzas', require('./routes/pizzaRoute'))
 app.use('/api/users', require('./routes/userRoutes'))
 app.use('/api/orders', require('./routes/orderRoute'))
+
+//static files
+app.use(express.static(path.join(__dirname, "./client/build")))
+app.get('*',function(req,res){
+    res.sendFile(path.join(__dirname,"./client/build/index.html"))
+});
 
 
 const PORT = process.env.PORT || 8080
